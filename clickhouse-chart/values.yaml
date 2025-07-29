@@ -1,0 +1,24 @@
+replicaCount: 1
+
+image:
+  repository: clickhouse/clickhouse-server
+  tag: "23.4"
+  pullPolicy: IfNotPresent
+
+service:
+  type: NodePort
+  port: 9000       # Native TCP
+  httpPort: 8123   # HTTP
+  nodePortHttp: 30123
+
+persistence:
+  enabled: true
+  accessMode: ReadWriteOnce
+  size: 5Gi
+  storageClassName: ""  # use "" to default to cluster's default StorageClass
+  mountPath: /var/lib/clickhouse
+
+clickhouse:
+  db: analytics
+  user: analytics_user
+  password: test123

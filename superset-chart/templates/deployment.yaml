@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: superset
+  labels:
+    app: superset
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: superset
+  template:
+    metadata:
+      labels:
+        app: superset
+    spec:
+      containers:
+        - name: superset
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - containerPort: 8088
+          env:
+            - name: SUPERSET_DATABASE_URI
+              value: "{{ .Values.externalDatabase.uri }}"
+            - name: SUPERSET_USERNAME
+              value: "{{ .Values.supersetUser.username }}"
+            - name: SUPERSET_FIRSTNAME
+              value: "{{ .Values.supersetUser.firstname }}"
+            - name: SUPERSET_LASTNAME
+              value: "{{ .Values.supersetUser.lastname }}"
+            - name: SUPERSET_EMAIL
+              value: "{{ .Values.supersetUser.email }}"
+            - name: SUPERSET_PASSWORD
+              value: "{{ .Values.supersetUser.password }}"
+            - name: FLASK_APP
+              value: superset
+          volumeMounts:
+            - name: superset-config
+              mountPath: /app/pythonpath/superset_config.py
+              subPath: superset_config.py
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              pip install clickhouse-connect && \
+              superset db upgrade && \
+              superset fab create-admin \
+                --username "$SUPERSET_USERNAME" \
+                --firstname "$SUPERSET_FIRSTNAME" \
+                --lastname "$SUPERSET_LASTNAME" \
+                --email "$SUPERSET_EMAIL" \
+                --password "$SUPERSET_PASSWORD" && \
+              superset init && \
+              gunicorn -w 2 -b 0.0.0.0:8088 "superset.app:create_app()"
+      volumes:
+        - name: superset-config
+          configMap:
+            name: superset-config

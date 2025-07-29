@@ -1,0 +1,19 @@
+image:
+  repository: apache/superset
+  tag: latest
+  pullPolicy: Always
+
+service:
+  type: NodePort
+  port: 8088
+  nodePort: 30088
+
+supersetUser:
+  username: admin
+  firstname: Admin
+  lastname: User
+  email: admin@superset.local
+  password: admin
+
+externalDatabase:
+  uri: mysql+pymysql://admin:siIxgzrMXEmtm47uoYxs@gamedb.cluster-cx6aii8yyy4v.ap-northeast-1.rds.amazonaws.com:3306/superset

@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-clickhouse
+  labels:
+    app: {{ .Release.Name }}-clickhouse
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-clickhouse
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-clickhouse
+    spec:
+      containers:
+          - name: clickhouse
+            image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+            imagePullPolicy: {{ .Values.image.pullPolicy }}
+            ports:
+              - containerPort: {{ .Values.service.port }}
+              - containerPort: {{ .Values.service.httpPort }}
+            env:
+              - name: CLICKHOUSE_DB
+                value: {{ .Values.clickhouse.db | quote }}
+              - name: CLICKHOUSE_USER
+                value: {{ .Values.clickhouse.user | quote }}
+              - name: CLICKHOUSE_PASSWORD
+                valueFrom:
+                  secretKeyRef:
+                    name: {{ .Release.Name }}-clickhouse-secret
+                    key: clickhouse-password
+            volumeMounts:
+              - name: clickhouse-storage
+                mountPath: {{ .Values.persistence.mountPath }}
+      volumes:
+        - name: clickhouse-storage
+          persistentVolumeClaim:
+            claimName: {{ .Release.Name }}-clickhouse-pvc
