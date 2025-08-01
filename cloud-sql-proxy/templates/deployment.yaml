@@ -18,7 +18,7 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           command:
             - "/cloud_sql_proxy"
-            - "-instances={{ .Values.instanceConnectionName }}=tcp:3306"
+            - "-instances={{ .Values.instanceConnectionName }}=tcp:0.0.0.0:3306"
             - "-credential_file=/secrets/credentials.json"
             - "-ip_address_types=PRIVATE"
           ports:
