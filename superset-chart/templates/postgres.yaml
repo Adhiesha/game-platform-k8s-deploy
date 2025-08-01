@@ -31,11 +31,11 @@ spec:
             - containerPort: 5432
           env:
             - name: POSTGRES_DB
-              value: superset
+              value: {{ .Values.internalDatabase.name | quote}}
             - name: POSTGRES_USER
-              value: superset
+              value: {{ .Values.internalDatabase.username | quote}}
             - name: POSTGRES_PASSWORD
-              value: superset
+              value: {{ .Values.internalDatabase.password | quote}}
           volumeMounts:
             - name: postgres-pv
               mountPath: /var/lib/postgresql/data
@@ -46,4 +46,4 @@ spec:
         accessModes: ["ReadWriteMany"]
         resources:
           requests:
-            storage: 10Gi
+            storage: {{ .Values.internalDatabase.storage }}

@@ -19,4 +19,4 @@ internalDatabase:
   name: superset
   username: superset
   password: superset
-  storage: 10Gi
+  storage: 5Gi
