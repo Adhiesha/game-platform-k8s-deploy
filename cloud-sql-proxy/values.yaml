@@ -1,0 +1,11 @@
+image:
+  repository: gcr.io/cloudsql-docker/gce-proxy
+  tag: 1.36.2
+  pullPolicy: IfNotPresent
+
+serviceAccountSecret: cloudsql-instance-credentials
+instanceConnectionName: cloud-project-467702:us-central1:lugx-mysql
+
+service:
+  name: mysql-internal
+  port: 3306

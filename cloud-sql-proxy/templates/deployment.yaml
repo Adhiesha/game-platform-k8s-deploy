@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cloudsql-proxy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cloudsql-proxy
+  template:
+    metadata:
+      labels:
+        app: cloudsql-proxy
+    spec:
+      containers:
+        - name: cloudsql-proxy
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command:
+            - "/cloud_sql_proxy"
+            - "-instances={{ .Values.instanceConnectionName }}=tcp:3306"
+            - "-credential_file=/secrets/credentials.json"
+            - "-ip_address_types=PRIVATE"
+          ports:
+            - containerPort: 3306
+          volumeMounts:
+            - name: cloudsql-instance-credentials
+              mountPath: /secrets/
+              readOnly: true
+      volumes:
+        - name: cloudsql-instance-credentials
+          secret:
+            secretName: {{ .Values.serviceAccountSecret }}

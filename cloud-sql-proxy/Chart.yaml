@@ -1,0 +1,6 @@
+apiVersion: v2
+name: cloudsql-proxy
+description: Helm chart to deploy Cloud SQL Auth Proxy in GKE
+type: application
+version: 0.1.0
+appVersion: "1.36.2"
