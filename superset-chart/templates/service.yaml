@@ -9,4 +9,4 @@ spec:
   ports:
     - port: {{ .Values.service.port }}
       targetPort: 8088
-      nodePort: {{ .Values.service.nodePort }}
+

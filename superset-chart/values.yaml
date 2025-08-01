@@ -4,9 +4,8 @@ image:
   pullPolicy: Always
 
 service:
-  type: NodePort
+  type: LoadBalancer
   port: 8088
-  nodePort: 30088
 
 supersetUser:
   username: admin
@@ -15,5 +14,9 @@ supersetUser:
   email: admin@superset.local
   password: admin
 
-externalDatabase:
-  uri: mysql+pymysql://admin:siIxgzrMXEmtm47uoYxs@gamedb.cluster-cx6aii8yyy4v.ap-northeast-1.rds.amazonaws.com:3306/superset
+internalDatabase:
+  enabled: true
+  name: superset
+  username: superset
+  password: superset
+  storage: 10Gi

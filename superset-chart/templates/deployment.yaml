@@ -22,7 +22,7 @@ spec:
             - containerPort: 8088
           env:
             - name: SUPERSET_DATABASE_URI
-              value: "{{ .Values.externalDatabase.uri }}"
+              value: "postgresql+psycopg2://superset:superset@superset-postgresql:5432/superset"
             - name: SUPERSET_USERNAME
               value: "{{ .Values.supersetUser.username }}"
             - name: SUPERSET_FIRSTNAME
